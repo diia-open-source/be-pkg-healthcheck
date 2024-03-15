@@ -26,7 +26,7 @@ This repository contains the package healthcheck functionality for application.
 Example:
 
 ```
-git clone https://github.com/diia-open-source/pkg-healthcheck.git
+git clone https://github.com/diia-open-source/be-pkg-healthcheck.git pkg-healthcheck
 ```
 
 ---
