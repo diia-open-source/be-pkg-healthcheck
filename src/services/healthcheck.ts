@@ -1,4 +1,4 @@
-import * as http from 'http'
+import * as http from 'node:http'
 
 import { merge } from 'lodash'
 
@@ -17,18 +17,18 @@ export class HealthCheck implements OnInit {
     ) {}
 
     async onInit(): Promise<void> {
-        if (!this.healthCheckConfig.isEnabled) {
-            this.logger.info('HealthCheck is disabled')
-
-            return
-        }
-
-        if (!this.healthCheckableServices.length) {
+        if (this.healthCheckableServices.length === 0) {
             for (const instance of Object.values(this.container)) {
                 if (guards.hasOnHealthCheckHook(instance)) {
                     this.healthCheckableServices.push(instance)
                 }
             }
+        }
+
+        if (!this.healthCheckConfig.isEnabled) {
+            this.logger.info('HealthCheck is disabled')
+
+            return
         }
 
         const server: http.Server = http.createServer(async (_, res) => {

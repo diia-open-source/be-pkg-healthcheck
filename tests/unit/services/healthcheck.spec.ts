@@ -1,4 +1,4 @@
-import * as http from 'http'
+import * as http from 'node:http'
 
 import { HttpStatusCode, Logger } from '@diia-inhouse/types'
 
@@ -22,7 +22,7 @@ const res = {
 
 let executeRequest: () => Promise<void>
 
-jest.mock('http', () => {
+jest.mock('node:http', () => {
     return {
         __esModule: true,
         createServer: (cb1: (_req: unknown, _res: unknown) => unknown): unknown => {
