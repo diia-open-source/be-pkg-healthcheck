@@ -1,5 +1,7 @@
 import * as http from 'node:http'
 
+import { mock } from 'vitest-mock-extended'
+
 import { HttpStatusCode, Logger } from '@diia-inhouse/types'
 
 import { HealthCheck, HealthCheckDetails } from '../../../src'
@@ -9,20 +11,14 @@ const healthCheckConfig = {
     port: 4567,
 }
 
-const loggerMock = <Logger>(<unknown>{
-    info: jest.fn(),
-    error: jest.fn(),
-    warn: jest.fn(),
-})
-
 const res = {
-    end: jest.fn(),
+    end: vi.fn(),
     statusCode: undefined,
 }
 
 let executeRequest: () => Promise<void>
 
-jest.mock('node:http', () => {
+vi.mock('node:http', () => {
     return {
         __esModule: true,
         createServer: (cb1: (_req: unknown, _res: unknown) => unknown): unknown => {
@@ -38,12 +34,14 @@ jest.mock('node:http', () => {
 })
 
 describe('Service Healthcheck', () => {
+    const loggerMock = mock<Logger>()
+
     beforeEach(() => {
         res.end.mockReset()
     })
     describe('method: `onInit`', () => {
         it('should create server', async () => {
-            const spy = jest.spyOn(http, 'createServer')
+            const spy = vi.spyOn(http, 'createServer')
             const service = new HealthCheck({}, healthCheckConfig, loggerMock)
 
             await service.onInit()
@@ -52,8 +50,8 @@ describe('Service Healthcheck', () => {
         })
 
         it('should skip if healthcheck is not enabled', async () => {
-            const createServerSpy = jest.spyOn(http, 'createServer')
-            const loggerSpy = jest.spyOn(loggerMock, 'info')
+            const createServerSpy = vi.spyOn(http, 'createServer')
+            const loggerSpy = vi.spyOn(loggerMock, 'info')
 
             const service = new HealthCheck({}, { ...healthCheckConfig, isEnabled: false }, loggerMock)
 
@@ -146,6 +144,64 @@ describe('Service Healthcheck', () => {
             expect(res.end).toHaveBeenCalledWith('{}')
             expect(res.statusCode).toEqual(HttpStatusCode.SERVICE_UNAVAILABLE)
             expect(loggerMock.error).toHaveBeenCalledWith(expectedErrorMessage, { err: expectedError })
+        })
+    })
+
+    describe('method: `addHealthCheckable`', () => {
+        it('should add service to health check after initialization', async () => {
+            const container = {
+                service1: {
+                    onHealthCheck: (): HealthCheckDetails => ({
+                        details: { item1: 'item1' },
+                        status: HttpStatusCode.OK,
+                    }),
+                },
+            }
+            const service = new HealthCheck(container, healthCheckConfig, loggerMock)
+
+            await service.onInit()
+
+            service.addHealthCheckable({
+                onHealthCheck: async () => ({
+                    details: { dynamicItem: 'dynamicValue' },
+                    status: HttpStatusCode.OK,
+                }),
+            })
+
+            await executeRequest()
+
+            expect(res.end).toHaveBeenCalledWith(
+                JSON.stringify({
+                    item1: 'item1',
+                    dynamicItem: 'dynamicValue',
+                }),
+            )
+            expect(res.statusCode).toEqual(HttpStatusCode.OK)
+        })
+
+        it('should include dynamically added service in unhealthy status check', async () => {
+            const container = {
+                service1: {
+                    onHealthCheck: (): HealthCheckDetails => ({
+                        details: { item1: 'item1' },
+                        status: HttpStatusCode.OK,
+                    }),
+                },
+            }
+            const service = new HealthCheck(container, healthCheckConfig, loggerMock)
+
+            await service.onInit()
+
+            service.addHealthCheckable({
+                onHealthCheck: async () => ({
+                    details: { worker: 'FAILED' },
+                    status: HttpStatusCode.SERVICE_UNAVAILABLE,
+                }),
+            })
+
+            await executeRequest()
+
+            expect(res.statusCode).toEqual(HttpStatusCode.SERVICE_UNAVAILABLE)
         })
     })
 })

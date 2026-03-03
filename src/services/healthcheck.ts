@@ -16,6 +16,10 @@ export class HealthCheck implements OnInit {
         private readonly logger: Logger,
     ) {}
 
+    addHealthCheckable(service: OnHealthCheck): void {
+        this.healthCheckableServices.push(service)
+    }
+
     async onInit(): Promise<void> {
         if (this.healthCheckableServices.length === 0) {
             for (const instance of Object.values(this.container)) {
