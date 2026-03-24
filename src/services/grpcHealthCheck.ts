@@ -57,7 +57,7 @@ export class GrpcHealthCheckImplementation {
                 const service: string = call.request.service
 
                 const interval = setInterval(async () => {
-                    let updatedStatus = health.ServingStatus.SERVING
+                    let updatedStatus: health.ServingStatus = health.ServingStatus.SERVING
                     if (!this.statusMap[service]) {
                         updatedStatus = health.ServingStatus.SERVICE_UNKNOWN
                         this.setStatus(service, updatedStatus)
