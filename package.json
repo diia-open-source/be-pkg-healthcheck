@@ -1,6 +1,6 @@
 {
     "name": "@diia-inhouse/healthcheck",
-    "version": "1.17.7",
+    "version": "1.17.8",
     "description": "Healthcheck",
     "main": "dist/index.js",
     "types": "dist/types/index.d.ts",
@@ -43,7 +43,7 @@
         "@diia-inhouse/eslint-config": "8.8.0",
         "@diia-inhouse/genproto": "3.2.9",
         "@diia-inhouse/test": "7.3.11",
-        "@diia-inhouse/types": "11.7.0",
+        "@diia-inhouse/types": "12.0.0",
         "@diia-inhouse/utils": "5.3.7",
         "@diia-inhouse/validators": "1.28.14",
         "@grpc/grpc-js": "1.14.3",
