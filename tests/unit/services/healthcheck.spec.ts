@@ -16,14 +16,14 @@ const res = {
     statusCode: undefined,
 }
 
-let executeRequest: () => Promise<void>
+let executeRequest: (url?: string) => Promise<void>
 
 vi.mock('node:http', () => {
     return {
         __esModule: true,
         createServer: (cb1: (_req: unknown, _res: unknown) => unknown): unknown => {
-            executeRequest = async (): Promise<void> => {
-                await cb1(undefined, res)
+            executeRequest = async (url?: string): Promise<void> => {
+                await cb1({ url }, res)
             }
 
             return {
@@ -202,6 +202,127 @@ describe('Service Healthcheck', () => {
             await executeRequest()
 
             expect(res.statusCode).toEqual(HttpStatusCode.SERVICE_UNAVAILABLE)
+        })
+    })
+
+    describe('liveness endpoint', () => {
+        it('should return 200 on /live regardless of downstream service health', async () => {
+            const container = {
+                service1: {
+                    onHealthCheck: (): HealthCheckDetails => ({
+                        details: { item1: 'item1' },
+                        status: HttpStatusCode.SERVICE_UNAVAILABLE,
+                    }),
+                },
+            }
+            const service = new HealthCheck(container, healthCheckConfig, loggerMock)
+
+            await service.onInit()
+
+            await executeRequest('/live')
+
+            expect(res.statusCode).toEqual(HttpStatusCode.OK)
+            expect(res.end).toHaveBeenCalledWith(JSON.stringify({ status: 'alive' }))
+        })
+    })
+
+    describe('readiness endpoint', () => {
+        it('should run full health check on /readiness and return 200 when healthy', async () => {
+            const container = {
+                service1: {
+                    onHealthCheck: (): HealthCheckDetails => ({
+                        details: { item1: 'item1' },
+                        status: HttpStatusCode.OK,
+                    }),
+                },
+            }
+            const service = new HealthCheck(container, healthCheckConfig, loggerMock)
+
+            await service.onInit()
+
+            await executeRequest('/readiness')
+
+            expect(res.statusCode).toEqual(HttpStatusCode.OK)
+            expect(res.end).toHaveBeenCalledWith(JSON.stringify({ item1: 'item1' }))
+        })
+
+        it('should run full health check on /readiness and return 503 when unhealthy', async () => {
+            const container = {
+                service1: {
+                    onHealthCheck: (): HealthCheckDetails => ({
+                        details: { db: 'disconnected' },
+                        status: HttpStatusCode.SERVICE_UNAVAILABLE,
+                    }),
+                },
+            }
+            const service = new HealthCheck(container, healthCheckConfig, loggerMock)
+
+            await service.onInit()
+
+            await executeRequest('/readiness')
+
+            expect(res.statusCode).toEqual(HttpStatusCode.SERVICE_UNAVAILABLE)
+        })
+    })
+
+    describe('startup endpoint', () => {
+        it('should run full health check on /startup', async () => {
+            const container = {
+                service1: {
+                    onHealthCheck: (): HealthCheckDetails => ({
+                        details: { item1: 'item1' },
+                        status: HttpStatusCode.OK,
+                    }),
+                },
+            }
+            const service = new HealthCheck(container, healthCheckConfig, loggerMock)
+
+            await service.onInit()
+
+            await executeRequest('/startup')
+
+            expect(res.statusCode).toEqual(HttpStatusCode.OK)
+            expect(res.end).toHaveBeenCalledWith(JSON.stringify({ item1: 'item1' }))
+        })
+    })
+
+    describe('backward compatibility', () => {
+        it('should run full health check on root path /', async () => {
+            const container = {
+                service1: {
+                    onHealthCheck: (): HealthCheckDetails => ({
+                        details: { item1: 'item1' },
+                        status: HttpStatusCode.OK,
+                    }),
+                },
+            }
+            const service = new HealthCheck(container, healthCheckConfig, loggerMock)
+
+            await service.onInit()
+
+            await executeRequest('/')
+
+            expect(res.statusCode).toEqual(HttpStatusCode.OK)
+            expect(res.end).toHaveBeenCalledWith(JSON.stringify({ item1: 'item1' }))
+        })
+
+        it('should run full health check when url is undefined', async () => {
+            const container = {
+                service1: {
+                    onHealthCheck: (): HealthCheckDetails => ({
+                        details: { item1: 'item1' },
+                        status: HttpStatusCode.OK,
+                    }),
+                },
+            }
+            const service = new HealthCheck(container, healthCheckConfig, loggerMock)
+
+            await service.onInit()
+
+            await executeRequest()
+
+            expect(res.statusCode).toEqual(HttpStatusCode.OK)
+            expect(res.end).toHaveBeenCalledWith(JSON.stringify({ item1: 'item1' }))
         })
     })
 })

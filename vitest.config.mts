@@ -14,7 +14,6 @@ export default defineConfig({
         },
     },
     test: {
-        name: 'unit',
         env: {
             NODE_ENV: 'test',
         },
@@ -25,6 +24,21 @@ export default defineConfig({
         testTimeout: timeout,
         hookTimeout: timeout,
         exclude: ['node_modules', 'dist'],
-        include: ['tests/unit/**/*.spec.ts'],
+        projects: [
+            {
+                extends: true,
+                test: {
+                    name: 'unit',
+                    include: ['tests/unit/**/*.spec.ts'],
+                },
+            },
+            {
+                extends: true,
+                test: {
+                    name: 'integration',
+                    include: ['tests/integration/**/*.spec.ts'],
+                },
+            },
+        ],
     },
 })

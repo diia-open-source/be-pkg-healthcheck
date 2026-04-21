@@ -1,6 +1,6 @@
 {
     "name": "@diia-inhouse/healthcheck",
-    "version": "1.17.19",
+    "version": "1.18.0",
     "description": "Healthcheck",
     "main": "dist/index.js",
     "types": "dist/types/index.d.ts",
@@ -22,7 +22,7 @@
         "lint-fix": "eslint . --fix && prettier --write . && buf format ./proto --write",
         "lint:lockfile": "lockfile-lint --path package-lock.json --allowed-hosts registry.npmjs.org --validate-https",
         "prepare": "npm run build",
-        "test": "vitest run",
+        "test": "tsc --project tests/tsconfig.json --noEmit && vitest run",
         "test:watch": "vitest watch",
         "find-circulars": "madge --circular --extensions ts ./",
         "genproto": "npx genproto --outputDir src/generated"
