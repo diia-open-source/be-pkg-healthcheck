@@ -1,6 +1,6 @@
 {
     "name": "@diia-inhouse/healthcheck",
-    "version": "1.18.6",
+    "version": "1.18.7",
     "description": "Healthcheck",
     "main": "dist/index.js",
     "types": "dist/types/index.d.ts",
