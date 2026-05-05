@@ -1,6 +1,6 @@
 {
     "name": "@diia-inhouse/healthcheck",
-    "version": "1.18.9",
+    "version": "1.18.10",
     "description": "Healthcheck",
     "main": "dist/index.js",
     "types": "dist/types/index.d.ts",
@@ -44,8 +44,8 @@
         "@diia-inhouse/genproto": "3.3.1",
         "@diia-inhouse/test": "7.3.24",
         "@diia-inhouse/types": "12.0.5",
-        "@diia-inhouse/utils": "5.3.29",
-        "@diia-inhouse/validators": "1.28.35",
+        "@diia-inhouse/utils": "5.3.30",
+        "@diia-inhouse/validators": "1.28.36",
         "@grpc/grpc-js": "1.14.3",
         "@types/lodash": "4.17.24",
         "@types/node": "25.3.3",
