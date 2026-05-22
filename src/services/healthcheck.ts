@@ -1,12 +1,12 @@
 import * as http from 'node:http'
 
-import { merge } from 'lodash'
+import lodash from 'lodash'
 
-import { HttpStatusCode, Logger, OnHealthCheck, OnInit } from '@diia-inhouse/types'
-import { OnDestroy } from '@diia-inhouse/types/dist/types/interfaces/onDestroy'
+import { HttpStatusCode, Logger, OnDestroy, OnHealthCheck, OnInit } from '@diia-inhouse/types'
+/* oxlint-disable-next-line eslint/no-restricted-imports -- leaf library; consumers cannot inject utils via DI */
 import { guards } from '@diia-inhouse/utils'
 
-import { HealthCheckConfig, HealthCheckDetails, HealthCheckResponse } from '../interfaces'
+import { HealthCheckConfig, HealthCheckDetails, HealthCheckResponse } from '../interfaces/index.js'
 
 export class HealthCheck implements OnInit, OnDestroy {
     private static readonly LIVENESS_PATH = '/live'
@@ -69,6 +69,7 @@ export class HealthCheck implements OnInit, OnDestroy {
         }
 
         return await new Promise((resolve, reject) => {
+            // oxlint-disable-next-line eslint-plugin-promise/no-multiple-resolved -- ternary; reject and resolve are mutually exclusive per callback
             this.server!.close((err) => (err ? reject(err) : resolve()))
         })
     }
@@ -80,7 +81,7 @@ export class HealthCheck implements OnInit, OnDestroy {
                 try {
                     const { details: serviceDetails, status } = await service.onHealthCheck()
 
-                    details = merge(details, serviceDetails)
+                    details = lodash.merge(details, serviceDetails)
 
                     return status
                 } catch (err) {

@@ -21,7 +21,7 @@ function createClient(port: number): HealthCheckClient {
         enums: String,
         defaults: true,
         oneofs: true,
-        includeDirs: [`${__dirname}/../../proto`],
+        includeDirs: [`${import.meta.dirname}/../../proto`],
     })
     const proto = loadPackageDefinition(pkgDefs)
 
@@ -53,6 +53,7 @@ describe('GrpcHealthCheck integration', () => {
     afterEach(async () => {
         client?.close?.()
         await new Promise<void>((resolve, reject) => {
+            // oxlint-disable-next-line eslint-plugin-promise/no-multiple-resolved -- ternary; reject and resolve are mutually exclusive per callback
             server?.tryShutdown((err) => (err ? reject(err) : resolve()))
         })
     })

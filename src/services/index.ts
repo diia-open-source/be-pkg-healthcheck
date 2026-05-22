@@ -1,3 +1,3 @@
-export * from './healthcheck'
+export * from './healthcheck.js'
 
-export * from './grpcHealthCheck'
+export * from './grpcHealthCheck.js'

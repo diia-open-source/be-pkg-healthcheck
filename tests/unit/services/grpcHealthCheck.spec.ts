@@ -6,6 +6,10 @@ import { generated_health as health } from '../../../src/generated'
 import { GrpcHealthCheckImplementation } from '../../../src/services/grpcHealthCheck'
 import { HealthCheck } from '../../../src/services/healthcheck'
 
+type CheckHandler = (call: { request: { service: string } }, callback: (error: unknown, result?: unknown) => void) => Promise<void>
+type AddServiceImpl = { check: CheckHandler; watch: (...args: unknown[]) => unknown }
+type AddServiceFn = (definition: unknown, implementation: AddServiceImpl) => void
+
 describe('GrpcHealthCheckImplementation', () => {
     describe('check', () => {
         it('should run full health check for default (empty) service name', async () => {
@@ -14,12 +18,12 @@ describe('GrpcHealthCheckImplementation', () => {
             healthCheck.healthcheck.mockResolvedValue({ isHealthy: true, details: { db: 'ok' } })
 
             const grpcHealth = new GrpcHealthCheckImplementation(healthCheck)
-            const server = { addService: vi.fn() }
+            const server = { addService: vi.fn<AddServiceFn>() }
 
             grpcHealth.addToServer(server as never)
 
             const checkHandler = server.addService.mock.calls[0][1].check
-            const callback = vi.fn()
+            const callback = vi.fn<(error: unknown, result?: unknown) => void>()
 
             await checkHandler({ request: { service: '' } }, callback)
 
@@ -30,12 +34,12 @@ describe('GrpcHealthCheckImplementation', () => {
         it('should return SERVING immediately for "live" service name without calling healthcheck', async () => {
             const healthCheck = mock<HealthCheck>()
             const grpcHealth = new GrpcHealthCheckImplementation(healthCheck)
-            const server = { addService: vi.fn() }
+            const server = { addService: vi.fn<AddServiceFn>() }
 
             grpcHealth.addToServer(server as never)
 
             const checkHandler = server.addService.mock.calls[0][1].check
-            const callback = vi.fn()
+            const callback = vi.fn<(error: unknown, result?: unknown) => void>()
 
             await checkHandler({ request: { service: 'live' } }, callback)
 
@@ -46,12 +50,12 @@ describe('GrpcHealthCheckImplementation', () => {
         it('should return NOT_FOUND for unknown service name', async () => {
             const healthCheck = mock<HealthCheck>()
             const grpcHealth = new GrpcHealthCheckImplementation(healthCheck)
-            const server = { addService: vi.fn() }
+            const server = { addService: vi.fn<AddServiceFn>() }
 
             grpcHealth.addToServer(server as never)
 
             const checkHandler = server.addService.mock.calls[0][1].check
-            const callback = vi.fn()
+            const callback = vi.fn<(error: unknown, result?: unknown) => void>()
 
             await checkHandler({ request: { service: 'unknown-service' } }, callback)
 
@@ -65,12 +69,12 @@ describe('GrpcHealthCheckImplementation', () => {
             healthCheck.healthcheck.mockResolvedValue({ isHealthy: false, details: { db: 'disconnected' } })
 
             const grpcHealth = new GrpcHealthCheckImplementation(healthCheck)
-            const server = { addService: vi.fn() }
+            const server = { addService: vi.fn<AddServiceFn>() }
 
             grpcHealth.addToServer(server as never)
 
             const checkHandler = server.addService.mock.calls[0][1].check
-            const callback = vi.fn()
+            const callback = vi.fn<(error: unknown, result?: unknown) => void>()
 
             await checkHandler({ request: { service: '' } }, callback)
 
@@ -79,12 +83,12 @@ describe('GrpcHealthCheckImplementation', () => {
 
         it('should return UNKNOWN when no healthCheck instance is provided', async () => {
             const grpcHealth = new GrpcHealthCheckImplementation(undefined)
-            const server = { addService: vi.fn() }
+            const server = { addService: vi.fn<AddServiceFn>() }
 
             grpcHealth.addToServer(server as never)
 
             const checkHandler = server.addService.mock.calls[0][1].check
-            const callback = vi.fn()
+            const callback = vi.fn<(error: unknown, result?: unknown) => void>()
 
             await checkHandler({ request: { service: '' } }, callback)
 

@@ -1,3 +1,3 @@
-export * from './config'
+export * from './config.js'
 
-export * from './response'
+export * from './response.js'

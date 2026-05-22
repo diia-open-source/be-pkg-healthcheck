@@ -1,7 +1,7 @@
 import path from 'node:path'
 
-export * from './interfaces'
+export * from './interfaces/index.js'
 
-export * from './services'
+export * from './services/index.js'
 
-export const protoPath = path.resolve(__dirname, '../proto/health.proto')
+export const protoPath: string = path.resolve(import.meta.dirname, '../proto/health.proto')

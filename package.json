@@ -1,9 +1,17 @@
 {
     "name": "@diia-inhouse/healthcheck",
-    "version": "1.18.10",
+    "version": "2.1.6",
+    "type": "module",
     "description": "Healthcheck",
     "main": "dist/index.js",
-    "types": "dist/types/index.d.ts",
+    "types": "dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "default": "./dist/index.js"
+        },
+        "./package.json": "./package.json"
+    },
     "repository": "https://github.com/diia-open-source/be-pkg-healthcheck",
     "author": "Diia",
     "license": "SEE LICENSE IN LICENSE.md",
@@ -12,14 +20,14 @@
         "proto"
     ],
     "engines": {
-        "node": ">=18"
+        "node": ">=24"
     },
     "scripts": {
         "prebuild": "rimraf dist",
-        "build": "npm run genproto && npx tsc",
+        "build": "npm run genproto && tsdown",
         "semantic-release": "semantic-release",
-        "lint": "eslint . && prettier --check . && buf format ./proto --diff --exit-code",
-        "lint-fix": "eslint . --fix && prettier --write . && buf format ./proto --write",
+        "lint": "oxlint && oxfmt --check . && buf format ./proto --diff --exit-code",
+        "lint-fix": "oxlint --fix && oxfmt . && buf format ./proto --write",
         "lint:lockfile": "lockfile-lint --path package-lock.json --allowed-hosts registry.npmjs.org --validate-https",
         "prepare": "npm run build",
         "test": "tsc --project tests/tsconfig.json --noEmit && vitest run",
@@ -28,48 +36,47 @@
         "genproto": "npx genproto --outputDir src/generated"
     },
     "dependencies": {
-        "@bufbuild/protobuf": "2.11.0",
-        "@grpc/proto-loader": "0.8.0",
+        "@bufbuild/protobuf": "2.12.0",
+        "@grpc/proto-loader": "0.8.1",
         "lodash": "4.18.1"
     },
     "peerDependencies": {
-        "@diia-inhouse/types": ">=3.0.0",
-        "@diia-inhouse/utils": ">=2.11.0"
+        "@diia-inhouse/types": ">=13.0.0",
+        "@diia-inhouse/utils": ">=6.0.0"
     },
     "devDependencies": {
-        "@bufbuild/buf": "1.66.0",
-        "@diia-inhouse/configs": "6.1.1",
-        "@diia-inhouse/errors": "1.18.24",
-        "@diia-inhouse/eslint-config": "8.8.2",
-        "@diia-inhouse/genproto": "3.3.1",
-        "@diia-inhouse/test": "7.3.24",
-        "@diia-inhouse/types": "12.0.5",
-        "@diia-inhouse/utils": "5.3.30",
-        "@diia-inhouse/validators": "1.28.36",
+        "@bufbuild/buf": "1.69.0",
+        "@diia-inhouse/configs": "7.0.0",
+        "@diia-inhouse/errors": "2.1.0",
+        "@diia-inhouse/genproto": "4.0.1",
+        "@diia-inhouse/oxc-config": "1.10.0",
+        "@diia-inhouse/test": "8.2.0",
+        "@diia-inhouse/types": "13.1.3",
+        "@diia-inhouse/utils": "6.0.8",
+        "@diia-inhouse/validators": "2.2.0",
         "@grpc/grpc-js": "1.14.3",
         "@types/lodash": "4.17.24",
-        "@types/node": "25.3.3",
-        "@vitest/coverage-v8": "4.0.18",
-        "@vitest/ui": "4.0.18",
-        "eslint": "9.39.3",
-        "glob": "11.1.0",
+        "@types/node": "25.6.2",
+        "@vitest/coverage-v8": "4.1.5",
+        "@vitest/ui": "4.1.5",
+        "glob": "13.0.6",
         "lockfile-lint": "5.0.0",
         "madge": "8.0.0",
+        "oxfmt": "0.48.0",
+        "oxlint": "1.63.0",
+        "oxlint-tsgolint": "0.22.1",
         "rimraf": "6.1.3",
-        "semantic-release": "24.2.9",
-        "type-fest": "5.4.4",
+        "semantic-release": "25.0.3",
+        "tsdown": "0.22.0",
+        "type-fest": "5.6.0",
         "vite-tsconfig-paths": "6.1.1",
-        "vitest": "4.0.18",
-        "vitest-mock-extended": "3.1.0"
+        "vitest": "4.1.5",
+        "vitest-mock-extended": "4.0.0"
     },
     "release": {
         "extends": "@diia-inhouse/configs/dist/semantic-release/package"
     },
     "commitlint": {
         "extends": "@diia-inhouse/configs/dist/commitlint"
-    },
-    "prettier": "@diia-inhouse/eslint-config/prettier",
-    "overrides": {
-        "esbuild": "0.27.3"
     }
 }

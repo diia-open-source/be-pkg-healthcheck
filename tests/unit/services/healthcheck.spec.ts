@@ -12,7 +12,7 @@ const healthCheckConfig = {
 }
 
 const res = {
-    end: vi.fn(),
+    end: vi.fn<(data?: unknown) => void>(),
     statusCode: undefined,
 }
 

@@ -3,9 +3,9 @@ import { loadSync, type ServiceDefinition } from '@grpc/proto-loader'
 
 import { GrpcStatusCode } from '@diia-inhouse/types'
 
-import { generated_health as health } from '../generated'
-import { HealthCheckDetails } from '../interfaces'
-import { HealthCheck } from './healthcheck'
+import { generated_health as health } from '../generated/index.js'
+import { HealthCheckDetails } from '../interfaces/index.js'
+import { HealthCheck } from './healthcheck.js'
 
 export class GrpcHealthCheckImplementation {
     private readonly defaultServiceName = ''
@@ -19,6 +19,7 @@ export class GrpcHealthCheckImplementation {
     private watchErrorMap: { [key: string]: Error } = {}
 
     constructor(
+        // oxlint-disable-next-line typescript/no-duplicate-type-constituents -- `| undefined` required by --isolatedDeclarations (TS9025)
         private readonly healthCheck?: HealthCheck | undefined,
         private statusMap: { [key: string]: health.ServingStatus } = { '': health.ServingStatus.NOT_SERVING },
     ) {
@@ -28,7 +29,7 @@ export class GrpcHealthCheckImplementation {
             enums: String,
             defaults: true,
             oneofs: true,
-            includeDirs: [`${__dirname}/../../proto`],
+            includeDirs: [`${import.meta.dirname}/../../proto`],
         })
 
         this.serviceDefinition = loadedProto['grpc.health.v1.Health'] as ServiceDefinition
