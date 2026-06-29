@@ -1,6 +1,6 @@
 {
     "name": "@diia-inhouse/healthcheck",
-    "version": "2.1.43",
+    "version": "2.1.44",
     "type": "module",
     "description": "Healthcheck",
     "main": "dist/index.js",
@@ -51,7 +51,7 @@
         "@diia-inhouse/genproto": "4.0.4",
         "@diia-inhouse/oxc-config": "1.11.0",
         "@diia-inhouse/test": "8.2.14",
-        "@diia-inhouse/types": "14.0.0",
+        "@diia-inhouse/types": "14.1.0",
         "@diia-inhouse/utils": "6.0.37",
         "@diia-inhouse/validators": "2.2.29",
         "@grpc/grpc-js": "1.14.3",
