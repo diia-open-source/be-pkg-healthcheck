@@ -3,7 +3,7 @@ import { loadSync, type ServiceDefinition } from '@grpc/proto-loader'
 
 import { GrpcStatusCode } from '@diia-inhouse/types'
 
-import { generated_health as health } from '../generated/index.js'
+import { health } from '../generated/index.js'
 import { HealthCheckDetails } from '../interfaces/index.js'
 import { HealthCheck } from './healthcheck.js'
 

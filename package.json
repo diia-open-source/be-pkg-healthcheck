@@ -1,6 +1,6 @@
 {
     "name": "@diia-inhouse/healthcheck",
-    "version": "2.1.142",
+    "version": "2.1.143",
     "type": "module",
     "description": "Healthcheck",
     "main": "dist/index.js",
@@ -26,14 +26,15 @@
         "prebuild": "rimraf dist",
         "build": "npm run genproto && tsdown",
         "semantic-release": "semantic-release",
-        "lint": "oxlint && oxfmt --check . && buf format ./proto --diff --exit-code",
-        "lint-fix": "oxlint --fix && oxfmt . && buf format ./proto --write",
+        "lint": "oxlint && oxfmt --check . && diia-buf-lint",
+        "lint-fix": "oxlint --fix && oxfmt . && diia-buf-lint --fix",
         "lint:lockfile": "lockfile-lint --path package-lock.json --allowed-hosts registry.npmjs.org --validate-https",
         "prepare": "npm run build",
         "test": "tsc --project tests/tsconfig.json --noEmit && vitest run",
         "test:watch": "vitest watch",
         "find-circulars": "madge --circular --extensions ts ./",
-        "genproto": "npx genproto --outputDir src/generated"
+        "genproto": "buf generate",
+        "proto:breaking": "diia-buf-breaking"
     },
     "dependencies": {
         "@bufbuild/protobuf": "2.12.0",
@@ -48,7 +49,6 @@
         "@bufbuild/buf": "1.69.0",
         "@diia-inhouse/configs": "7.2.2",
         "@diia-inhouse/errors": "2.3.17",
-        "@diia-inhouse/genproto": "4.0.20",
         "@diia-inhouse/oxc-config": "3.2.0",
         "@diia-inhouse/test": "8.3.35",
         "@diia-inhouse/types": "14.5.1",
@@ -62,6 +62,7 @@
         "glob": "13.0.6",
         "lockfile-lint": "5.0.0",
         "madge": "8.0.0",
+        "nice-grpc-common": "2.0.4",
         "oxfmt": "0.48.0",
         "oxlint": "1.63.0",
         "oxlint-tsgolint": "0.22.1",

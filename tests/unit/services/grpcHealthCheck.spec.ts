@@ -2,7 +2,7 @@ import { mock } from 'vitest-mock-extended'
 
 import { GrpcStatusCode } from '@diia-inhouse/types'
 
-import { generated_health as health } from '../../../src/generated'
+import { health } from '../../../src/generated'
 import { GrpcHealthCheckImplementation } from '../../../src/services/grpcHealthCheck'
 import { HealthCheck } from '../../../src/services/healthcheck'
 
