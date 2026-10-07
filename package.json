@@ -1,6 +1,6 @@
 {
     "name": "@diia-inhouse/healthcheck",
-    "version": "2.1.144",
+    "version": "2.1.145",
     "type": "module",
     "description": "Healthcheck",
     "main": "dist/index.js",
@@ -48,12 +48,12 @@
     "devDependencies": {
         "@bufbuild/buf": "1.69.0",
         "@diia-inhouse/configs": "7.2.2",
-        "@diia-inhouse/errors": "2.3.17",
+        "@diia-inhouse/errors": "2.3.18",
         "@diia-inhouse/oxc-config": "3.2.0",
         "@diia-inhouse/test": "8.3.36",
         "@diia-inhouse/types": "14.5.2",
         "@diia-inhouse/utils": "6.1.21",
-        "@diia-inhouse/validators": "2.2.104",
+        "@diia-inhouse/validators": "2.2.106",
         "@grpc/grpc-js": "1.14.5",
         "@types/lodash": "4.17.24",
         "@types/node": "25.6.2",
