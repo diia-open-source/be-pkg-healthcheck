@@ -69,7 +69,6 @@ export class HealthCheck implements OnInit, OnDestroy {
         }
 
         return await new Promise((resolve, reject) => {
-            // oxlint-disable-next-line eslint-plugin-promise/no-multiple-resolved -- ternary; reject and resolve are mutually exclusive per callback
             this.server!.close((err) => (err ? reject(err) : resolve()))
         })
     }

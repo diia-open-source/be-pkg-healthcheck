@@ -19,7 +19,6 @@ export class GrpcHealthCheckImplementation {
     private watchErrorMap: { [key: string]: Error } = {}
 
     constructor(
-        // oxlint-disable-next-line typescript/no-duplicate-type-constituents -- `| undefined` required by --isolatedDeclarations (TS9025)
         private readonly healthCheck?: HealthCheck | undefined,
         private statusMap: { [key: string]: health.ServingStatus } = { '': health.ServingStatus.NOT_SERVING },
     ) {
