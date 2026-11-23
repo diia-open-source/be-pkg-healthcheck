@@ -1,6 +1,6 @@
 {
     "name": "@diia-inhouse/healthcheck",
-    "version": "2.1.210",
+    "version": "2.1.211",
     "description": "Healthcheck",
     "license": "SEE LICENSE IN LICENSE.md",
     "author": "diia-team",
@@ -20,7 +20,6 @@
         "./package.json": "./package.json"
     },
     "scripts": {
-        "prebuild": "rimraf dist",
         "build": "npm run genproto && tsdown",
         "semantic-release": "semantic-release",
         "lint": "oxlint && oxfmt --check . && diia-buf-lint",
@@ -57,7 +56,6 @@
         "oxfmt": "0.72.0",
         "oxlint": "1.87.0",
         "oxlint-tsgolint": "7.0.2003",
-        "rimraf": "6.1.3",
         "semantic-release": "25.0.3",
         "tsdown": "0.22.0",
         "type-fest": "5.6.0",
