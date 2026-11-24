@@ -1,6 +1,6 @@
 {
     "name": "@diia-inhouse/healthcheck",
-    "version": "2.1.212",
+    "version": "2.1.213",
     "description": "Healthcheck",
     "license": "SEE LICENSE IN LICENSE.md",
     "author": "diia-team",
@@ -39,11 +39,11 @@
     "devDependencies": {
         "@bufbuild/buf": "1.69.0",
         "@diia-inhouse/configs": "7.4.0",
-        "@diia-inhouse/errors": "2.3.49",
+        "@diia-inhouse/errors": "2.3.50",
         "@diia-inhouse/oxc-config": "6.2.1",
         "@diia-inhouse/test": "8.4.16",
         "@diia-inhouse/types": "14.13.3",
-        "@diia-inhouse/utils": "6.3.0",
+        "@diia-inhouse/utils": "6.3.1",
         "@diia-inhouse/validators": "2.3.0",
         "@grpc/grpc-js": "1.14.5",
         "@types/lodash": "4.17.24",
